@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Project File Extension Guidelines
 
-## Getting Started
+This document outlines the recommended file extensions for different types of files in our Next.js project.
 
-First, run the development server:
+## `.tsx` Extension Usage
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Use `.tsx` for files that contain React components or JSX syntax:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Pages
+- `page.tsx` (Main page)
+- `layout.tsx` (Layout)
+- `loading.tsx` (Loading UI)
+- `error.tsx` (Error page)
+- `not-found.tsx` (404 page)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Components
+- `Button.tsx`
+- `Card.tsx`
+- `Header.tsx`
+- `Footer.tsx`
+- `Modal.tsx`
+- `Form.tsx`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Special Pages
+- `template.tsx`
+- `default.tsx`
 
-## Learn More
+## `.ts` Extension Usage
 
-To learn more about Next.js, take a look at the following resources:
+Use `.ts` for files that contain pure TypeScript code without React components:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### API Related
+- `route.ts` (API routes)
+- `middleware.ts`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Type Definitions
+- `types.ts`
+- `interfaces.ts`
+- `enums.ts`
 
-## Deploy on Vercel
+### Utility Functions
+- `utils.ts`
+- `helpers.ts`
+- `constants.ts`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Service Logic
+- `api.ts`
+- `service.ts`
+- `repository.ts`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Configuration
+- `config.ts`
+- `env.ts`
+
+### Styling
+- `styles.ts` (for styled-components or emotion)
+- `theme.ts`
+
+### Testing
+- `test.ts`
+- `mock.ts`
+
+## Benefits of This Structure
+
+1. Clear code organization
+2. Better type checking
+3. Improved code readability
+4. Easier maintenance
+5. Better developer experience
+
+## Example
+
+```typescript
+// app/page.tsx - React component
+export default function Page() {
+  return <div>Hello World</div>
+}
+
+// app/api/route.ts - API handler
+export async function GET() {
+  return Response.json({ message: 'Hello' })
+} 
