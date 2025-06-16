@@ -121,26 +121,26 @@ export default function PostsPage() {
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-300 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="min-w-full border-collapse border border-gray-300">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">
                       제목
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell border border-gray-300">
                       내용 미리보기
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">
                       작성일
                     </th>
-                    <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">
                       액션
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white">
                   {posts.map((post, index) => (
                     <tr 
                       key={post.id} 
@@ -148,7 +148,7 @@ export default function PostsPage() {
                         index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
                       }`}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap border border-gray-300">
                         <div className="flex flex-col">
                           <div className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors">
                             <Link href={`/posts/${post.id}`} className="hover:underline">
@@ -157,18 +157,18 @@ export default function PostsPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 hidden md:table-cell">
+                      <td className="px-6 py-4 hidden md:table-cell border border-gray-300">
                         <div className="text-sm text-gray-600 max-w-xs truncate">
                           {post.content.length > 100 ? `${post.content.substring(0, 80)}...` : post.content}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap border border-gray-300">
                         <div className="flex items-center text-sm text-gray-500">
                           <span className="mr-1">📅</span>
                           <span>{formatDate(post.createdAt)}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-6 py-4 whitespace-nowrap text-center border border-gray-300">
                         <div className="flex items-center justify-center space-x-2">
                           <button
                             onClick={() => handleView(post.id)}
