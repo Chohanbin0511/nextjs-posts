@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Post } from '@/types/post';
 
 export default function PostsPage() {
+  const router = useRouter();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +50,14 @@ export default function PostsPage() {
     }
   };
 
+  const handleView = (id: string) => {
+    router.push(`/posts/${id}`);
+  };
+
+  const handleEdit = (id: string) => {
+    router.push(`/posts/${id}/edit`);
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 통일
@@ -80,59 +90,111 @@ export default function PostsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto p-4">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">게시글 목록</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* 헤더 섹션 */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">게시글 목록</h1>
+            <p className="text-gray-600">총 {posts.length}개의 게시글이 있습니다.</p>
+          </div>
           <Link
             href="/posts/new"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
           >
             새 글 작성
           </Link>
         </div>
 
         {posts.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <p className="text-gray-500">게시글이 없습니다.</p>
+          <div className="text-center py-20 bg-white rounded-2xl shadow-lg border border-gray-100">
+            <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+              <span className="text-2xl text-gray-400">📝</span>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">게시글이 없습니다</h3>
+            <p className="text-gray-500 mb-6">첫 번째 게시글을 작성해보세요!</p>
+            <Link
+              href="/posts/new"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              게시글 작성하기
+            </Link>
           </div>
         ) : (
-          <div className="space-y-4">
-            {posts.map((post) => (
-              <div
-                key={post.id}
-                className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-                    <p className="text-gray-500 text-sm">
-                      {formatDate(post.createdAt)}
-                    </p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Link
-                      href={`/posts/${post.id}`}
-                      className="px-3 py-1 text-blue-500 hover:text-blue-700"
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      제목
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
+                      내용 미리보기
+                    </th>
+                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      작성일
+                    </th>
+                    <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      액션
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {posts.map((post, index) => (
+                    <tr 
+                      key={post.id} 
+                      className={`hover:bg-gray-50 transition-colors ${
+                        index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
+                      }`}
                     >
-                      보기
-                    </Link>
-                    <Link
-                      href={`/posts/${post.id}/edit`}
-                      className="px-3 py-1 text-green-500 hover:text-green-700"
-                    >
-                      수정
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(post.id)}
-                      className="px-3 py-1 text-red-500 hover:text-red-700"
-                    >
-                      삭제
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex flex-col">
+                          <div className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors">
+                            <Link href={`/posts/${post.id}`} className="hover:underline">
+                              {post.title}
+                            </Link>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 hidden md:table-cell">
+                        <div className="text-sm text-gray-600 max-w-xs truncate">
+                          {post.content.length > 100 ? `${post.content.substring(0, 80)}...` : post.content}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center text-sm text-gray-500">
+                          <span className="mr-1">📅</span>
+                          <span>{formatDate(post.createdAt)}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <div className="flex items-center justify-center space-x-2">
+                          <button
+                            onClick={() => handleView(post.id)}
+                            className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full hover:bg-blue-100 transition-colors"
+                          >
+                            보기
+                          </button>
+                          <button
+                            onClick={() => handleEdit(post.id)}
+                            className="inline-flex items-center px-3 py-1 text-xs font-medium text-green-600 bg-green-50 rounded-full hover:bg-green-100 transition-colors"
+                          >
+                            수정
+                          </button>
+                          <button
+                            onClick={() => handleDelete(post.id)}
+                            className="inline-flex items-center px-3 py-1 text-xs font-medium text-red-600 bg-red-50 rounded-full hover:bg-red-100 transition-colors"
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
