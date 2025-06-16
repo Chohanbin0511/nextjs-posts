@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { redirect } from 'next/navigation';
 /**
  * 루트 레이아웃에 <title> 및 <meta>와 같은 <head> 태그를 수동으로 추가하지 말아야 합니다.
  * 대신 메타데이터 API를 사용하여 스트리밍 및 <head> 요소 중복 제거와 같은 고급 요구 사항을 자동으로 처리하세요.
@@ -43,5 +43,5 @@ import Link from 'next/link'
  *    window.history.forward()
  */
 export default function Page() {
-  return <Link href="/dashboard">Dashboard</Link>
+  redirect('/posts');
 }
