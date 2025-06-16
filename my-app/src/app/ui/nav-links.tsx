@@ -1,23 +1,13 @@
-'use client'
- 
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
- 
-export function NavLinks() {
-  const pathname = usePathname()
-  
- 
+
+export function NavLinks({ currentPath }: { currentPath: string }) {
   return (
     <nav>
-      <Link className={`link ${pathname === '/' ? 'active' : ''}`} href="/">
-        Home
-      </Link>
- 
       <Link
-        className={`link ${pathname === '/about' ? 'active' : ''}`}
-        href="/about"
+        className={`link${currentPath === '/posts' ? ' active' : ''}`}
+        href="/posts"
       >
-        About
+        Post
       </Link>
     </nav>
   )
