@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Post } from '@/types/post';
+import AuthButton from '@/components/AuthButton';
 
 export default function PostsPage() {
   const router = useRouter();
@@ -98,12 +99,15 @@ export default function PostsPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">게시글 목록</h1>
             <p className="text-gray-600">총 {posts.length}개의 게시글이 있습니다.</p>
           </div>
-          <Link
-            href="/posts/new"
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-          >
-            새 글 작성
-          </Link>
+          <div className="flex items-center gap-4">
+            <AuthButton />
+            <Link
+              href="/posts/new"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-lg hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+            >
+              새 글 작성
+            </Link>
+          </div>
         </div>
 
         {posts.length === 0 ? (
