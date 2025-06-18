@@ -1,4 +1,4 @@
-// 🔐 Zustand 로그인 상태 관리 + 쿠키 동기화
+// Zustand 로그인 상태 관리 + 쿠키 동기화
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import Cookies from 'js-cookie'
@@ -12,12 +12,14 @@ interface User {
 interface AuthState {
   user: User | null
   isLoggedIn: boolean
+  isLoading: boolean
+  isInitialized: boolean
   login: (email: string, password: string) => Promise<boolean>
   logout: () => void
   setUser: (user: User) => void
 }
 
-// 🍪 쿠키 동기화 함수들
+// 쿠키 동기화 함수들
 const syncToCookie = (isLoggedIn: boolean, user: User | null) => {
   if (isLoggedIn && user) {
     // 미들웨어에서 확인할 수 있도록 쿠키에 저장
@@ -37,11 +39,14 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       user: null,
       isLoggedIn: false,
+      isLoading: false,
+      isInitialized: false,
 
-      // 🔐 로그인 함수 (임시 구현)
+      // 로그인 함수 (임시 구현)
       login: async (email: string, password: string) => {
+        set({ isLoading: true })
         try {
-          console.log('🔐 로그인 시도:', email)
+          console.log('로그인 시도:', email)
           
           // 임시 로그인 로직 (실제로는 API 호출)
           if (email && password.length >= 4) {
@@ -52,29 +57,31 @@ export const useAuthStore = create<AuthState>()(
             }
             
             // Zustand 상태 업데이트
-            set({ user, isLoggedIn: true })
+            set({ user, isLoggedIn: true, isLoading: false })
             
-            // 🍪 쿠키에도 동기화
+            // 쿠키에도 동기화
             syncToCookie(true, user)
             
-            console.log('✅ 로그인 성공:', user)
+            console.log('로그인 성공:', user)
             return true
           } else {
-            console.log('❌ 로그인 실패: 잘못된 정보')
+            console.log('로그인 실패: 잘못된 정보')
+            set({ isLoading: false })
             return false
           }
         } catch (error) {
-          console.error('❌ 로그인 에러:', error)
+          console.error('로그인 에러:', error)
+          set({ isLoading: false })
           return false
         }
       },
 
-      // 🚪 로그아웃 함수
+      // 로그아웃 함수
       logout: () => {
-        console.log('🚪 로그아웃')
+        console.log('로그아웃')
         set({ user: null, isLoggedIn: false })
         
-        // 🍪 쿠키에서도 제거
+        // 쿠키에서도 제거
         syncToCookie(false, null)
       },
 
@@ -106,14 +113,17 @@ export const useAuthStore = create<AuthState>()(
             state.user = null
             state.isLoggedIn = false
           }
+          
+          // 초기화 완료 표시
+          state.isInitialized = true
         }
       }
     }
   )
 )
 
-// 🎯 로그인 상태 확인 훅
+// 로그인 상태 확인 훅
 export const useAuth = () => {
-  const { user, isLoggedIn, login, logout } = useAuthStore()
-  return { user, isLoggedIn, login, logout }
+  const { user, isLoggedIn, isLoading, isInitialized, login, logout } = useAuthStore()
+  return { user, isLoggedIn, isLoading, isInitialized, login, logout }
 } 

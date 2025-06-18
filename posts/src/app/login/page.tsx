@@ -1,24 +1,50 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/store/auth'
 
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { login, isLoggedIn } = useAuth()
+  const { login, isLoggedIn, isInitialized } = useAuth()
   
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  // 이미 로그인되어 있으면 리다이렉트
+  // 로그인 상태 체크 및 리다이렉트 처리
+  useEffect(() => {
+    if (isInitialized && isLoggedIn) {
+      const callbackUrl = searchParams?.get('callbackUrl') || '/posts'
+      console.log('Already logged in, redirecting to:', callbackUrl)
+      router.push(callbackUrl)
+    }
+  }, [isInitialized, isLoggedIn, router, searchParams])
+
+  // 초기화 중이면 로딩 화면 표시
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-600">로딩 중...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // 로그인되어 있으면 리다이렉트 중 화면 표시 (useEffect에서 리다이렉트 처리)
   if (isLoggedIn) {
-    const callbackUrl = searchParams.get('callbackUrl') || '/posts'
-    router.push(callbackUrl)
-    return null
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full space-y-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-600">리다이렉트 중...</p>
+        </div>
+      </div>
+    )
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,16 +53,24 @@ export default function LoginPage() {
     setError('')
 
     try {
+      console.log('Login attempt with:', email)
       const success = await login(email, password)
+      console.log('Login result:', success)
       
       if (success) {
-        // 로그인 성공 시 원래 페이지로 이동
-        const callbackUrl = searchParams.get('callbackUrl') || '/posts'
-        router.push(callbackUrl)
+        console.log('Login successful, redirecting immediately')
+        const callbackUrl = searchParams?.get('callbackUrl') || '/posts'
+        console.log('Redirecting to:', callbackUrl)
+        
+        // 작은 지연을 줘서 상태 업데이트가 완료되도록 함
+        setTimeout(() => {
+          router.push(callbackUrl)
+        }, 100)
       } else {
         setError('이메일 또는 비밀번호가 올바르지 않습니다.')
       }
     } catch (error) {
+      console.error('Login error:', error)
       setError('로그인 중 오류가 발생했습니다.')
     } finally {
       setIsLoading(false)

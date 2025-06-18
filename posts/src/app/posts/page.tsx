@@ -167,9 +167,8 @@ export default function PostsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap border border-gray-300">
-                        <div className="flex items-center text-sm text-gray-500">
-                          <span className="mr-1">📅</span>
-                          <span>{formatDate(post.createdAt)}</span>
+                        <div className="text-sm text-gray-500">
+                          {formatDate(post.createdAt)}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center border border-gray-300">
