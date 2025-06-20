@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Post, UpdatePostInput } from '@/types/post';
-import { posts } from '../route';
+import { posts } from '@/lib/posts-data';
 
 export async function GET(
   request: Request,

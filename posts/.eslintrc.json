@@ -1,1 +1,4 @@
 // ESlint 설정 파일
+{
+  "extends": ["next/core-web-vitals"]
+}
