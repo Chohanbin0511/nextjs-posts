@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { Post, UpdatePostInput } from '@/types/post';
 
@@ -15,11 +15,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    fetchPost();
-  }, [id]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const response = await fetch(`/api/posts/${id}`);
       if (!response.ok) {
@@ -38,7 +34,11 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id, router]);
+
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

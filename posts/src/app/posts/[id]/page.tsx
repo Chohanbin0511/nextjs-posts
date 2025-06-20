@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Post } from '@/types/post';
@@ -13,11 +13,7 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchPost();
-  }, [id]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -33,7 +29,11 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
   const handleDelete = async () => {
     if (confirm('정말로 삭제하시겠습니까?')) {
