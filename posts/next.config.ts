@@ -1,14 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  trailingSlash: false,
-  skipTrailingSlashRedirect: true,
-  async redirects() {
-    return []
-  },
-  async rewrites() {
-    return []
-  }
+  /* config options here */
 };
 
 export default nextConfig;

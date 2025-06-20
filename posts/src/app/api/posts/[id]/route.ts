@@ -7,18 +7,19 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const post = posts.find((p) => p.id === params.id);
+    const post = posts.find(p => p.id === params.id);
     if (!post) {
       return NextResponse.json(
         { error: 'Post not found' },
         { status: 404 }
       );
     }
+    console.log('GET /api/posts/[id] - found post:', post.id);
     return NextResponse.json(post);
   } catch (error) {
     console.error('Error in GET /api/posts/[id]:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'Failed to fetch post' },
       { status: 500 }
     );
   }
@@ -30,7 +31,7 @@ export async function PUT(
 ) {
   try {
     const body: UpdatePostInput = await request.json();
-    const postIndex = posts.findIndex((p) => p.id === params.id);
+    const postIndex = posts.findIndex(p => p.id === params.id);
     
     if (postIndex === -1) {
       return NextResponse.json(
@@ -39,18 +40,19 @@ export async function PUT(
       );
     }
 
-    const updatedPost: Post = {
+    posts[postIndex] = {
       ...posts[postIndex],
-      ...body,
+      title: body.title || posts[postIndex].title,
+      content: body.content || posts[postIndex].content,
       updatedAt: new Date().toISOString(),
     };
 
-    posts[postIndex] = updatedPost;
-    return NextResponse.json(updatedPost);
+    console.log('PUT /api/posts/[id] - updated post:', posts[postIndex].id);
+    return NextResponse.json(posts[postIndex]);
   } catch (error) {
     console.error('Error in PUT /api/posts/[id]:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'Failed to update post' },
       { status: 500 }
     );
   }
@@ -61,7 +63,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const postIndex = posts.findIndex((p) => p.id === params.id);
+    const postIndex = posts.findIndex(p => p.id === params.id);
     
     if (postIndex === -1) {
       return NextResponse.json(
@@ -70,12 +72,13 @@ export async function DELETE(
       );
     }
 
-    posts.splice(postIndex, 1);
+    const deletedPost = posts.splice(postIndex, 1)[0];
+    console.log('DELETE /api/posts/[id] - deleted post:', deletedPost.id);
     return NextResponse.json({ message: 'Post deleted successfully' });
   } catch (error) {
     console.error('Error in DELETE /api/posts/[id]:', error);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: 'Failed to delete post' },
       { status: 500 }
     );
   }
