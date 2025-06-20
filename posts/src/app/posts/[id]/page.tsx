@@ -57,30 +57,34 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-2xl mx-auto p-4">
-          <div className="bg-white p-6 rounded-lg shadow text-center">
-            <p className="text-red-500 mb-4">{error}</p>
-            <button
-              onClick={fetchPost}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              다시 시도
-            </button>
-          </div>
+      <div className="error-container">
+        <div className="error-card">
+          <p className="error-message">{error}</p>
+          <button
+            onClick={fetchPost}
+            className="btn-retry"
+          >
+            다시 시도
+          </button>
         </div>
       </div>
     );
@@ -88,58 +92,45 @@ export default function PostDetailPage({ params }: { params: Promise<{ id: strin
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="max-w-2xl mx-auto p-4">
-          <div className="bg-white p-6 rounded-lg shadow text-center">
-            <p className="text-gray-500">게시글을 찾을 수 없습니다.</p>
-            <Link
-              href="/posts"
-              className="inline-block mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              목록으로 돌아가기
-            </Link>
-          </div>
+      <div className="error-container">
+        <div className="error-card">
+          <p className="not-found-message">게시글을 찾을 수 없습니다.</p>
+          <Link href="/posts" className="btn-retry">
+            목록으로 돌아가기
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto p-4">
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-2">{post.title}</h1>
-            <p className="text-gray-500 text-sm">
-              작성일: {formatDate(post.createdAt)}
-            </p>
-          </div>
+    <div className="post-detail-container">
+      <div className="post-detail-card">
+        <div className="post-detail-header">
+          <h1 className="post-title">{post.title}</h1>
+          <p className="post-meta">
+            작성일: {formatDate(post.createdAt)}
+          </p>
+        </div>
 
-          <div className="prose max-w-none mb-6">
-            <p className="whitespace-pre-wrap">{post.content}</p>
-          </div>
+        <div className="post-content">
+          <div className="post-text">{post.content}</div>
+        </div>
 
-          <div className="flex justify-end space-x-4">
-            <Link
-              href="/posts"
-              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-            >
-              목록으로
-            </Link>
-            <Link
-              href={`/posts/${post.id}/edit`}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            >
-              수정
-            </Link>
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50"
-            >
-              {isDeleting ? '삭제 중...' : '삭제'}
-            </button>
-          </div>
+        <div className="post-detail-actions">
+          <Link href="/posts" className="btn-list">
+            목록으로
+          </Link>
+          <Link href={`/posts/${post.id}/edit`} className="btn-edit">
+            수정
+          </Link>
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="btn-delete"
+          >
+            {isDeleting ? '삭제 중...' : '삭제'}
+          </button>
         </div>
       </div>
     </div>

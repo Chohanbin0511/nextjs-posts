@@ -26,23 +26,19 @@ export default function LoginPage() {
   // 초기화 중이면 로딩 화면 표시
   if (!isInitialized) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full space-y-8 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-gray-600">로딩 중...</p>
-        </div>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p className="loading-text">로딩 중...</p>
       </div>
     )
   }
 
-  // 로그인되어 있으면 리다이렉트 중 화면 표시 (useEffect에서 리다이렉트 처리)
+  // 로그인되어 있으면 리다이렉트 중 화면 표시
   if (isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="max-w-md w-full space-y-8 text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-gray-600">리다이렉트 중...</p>
-        </div>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p className="loading-text">리다이렉트 중...</p>
       </div>
     )
   }
@@ -78,73 +74,68 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            로그인
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            포스트를 작성하려면 로그인해주세요
+    <div className="login-container">
+      <div className="login-card">
+        <div className="login-header">
+          <h1 className="login-title">로그인</h1>
+          <p className="login-subtitle">
+            Chohbin Posts에 오신 것을 환영합니다
           </p>
         </div>
         
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="login-form" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+            <div className="login-error">
               {error}
             </div>
           )}
           
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                이메일
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="your@email.com"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                비밀번호
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={4}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="비밀번호 (4자 이상)"
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-            >
-              {isLoading ? '로그인 중...' : '로그인'}
-            </button>
+          <div className="login-field">
+            <label htmlFor="email" className="login-label">
+              이메일 주소
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="login-input"
+              placeholder="your@email.com"
+            />
           </div>
           
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              테스트용: 아무 이메일과 4자 이상 비밀번호를 입력하세요
-            </p>
+          <div className="login-field">
+            <label htmlFor="password" className="login-label">
+              비밀번호
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={4}
+              className="login-input"
+              placeholder="비밀번호를 입력하세요"
+            />
           </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="login-button"
+          >
+            {isLoading ? '로그인 중...' : '로그인'}
+          </button>
         </form>
+        
+        <div className="login-info">
+          <p className="login-info-text">
+            테스트용 계정: 아무 이메일과 4자 이상 비밀번호를 입력하세요<br />
+            예: test@example.com / 1234
+          </p>
+        </div>
       </div>
     </div>
   )
